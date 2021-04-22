@@ -1,0 +1,38 @@
+#bin/bash
+pkg install git php -y
+git clone https://github.com/russellpabz/hotspotseller.git
+cat >start-mikhmon <<EOL
+#bin/bash
+if pgrep "php" >/dev/null 2>&1 ; then
+killall php
+fi
+cd hotspotseller
+php -S 0.0.0.0:8080
+EOL
+cat >update-mikhmon <<EOL
+#bin/bash
+mkdir ~/backup-mikhmon
+cp ~/hotspotseller/include/config.php ~/backup-mikhmon/config.php
+cp -rf ~/hotspotseller/voucher/. ~/backup-mikhmon/voucher/
+cp -rf ~/hotspotseller/img/. ~/backup-mikhmon/img/
+rm -rf hotspotseller
+rm ~/backup-mikhmon/voucher/print.php
+rm ~/backup-mikhmon/voucher/printbt.php
+git clone https://github.com/russellpabz/hotspotseller.git
+cp ~/backup-mikhmon/config.php ~/hotspotseller/include/config.php
+cp -rf ~/backup-mikhmon/voucher/. ~/hotspotseller/voucher/
+cp -rf ~/backup-mikhmon/img/. ~/hotspotseller/img/
+rm -rf ~/backup-mikhmon
+./start-mikhmon
+EOL
+cat >remove-mikhmon <<EOL
+#bin/bash
+rm -rf hotspotseller
+EOL
+cat >.bashrc <<EOL	
+~/start-mikhmon	
+EOL
+chmod +x start-mikhmon
+chmod +x update-mikhmon
+chmod +x remove-mikhmon
+./start-mikhmon
