@@ -15,8 +15,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
- 
 session_start();
 // hide all error
 error_reporting(0);
@@ -24,19 +22,12 @@ error_reporting(0);
 
 ob_start("ob_gzhandler");
 
-// echo '<pre>';
-// print_r($_SESSION);
-// echo '</pre>';
 
 $url = $_SERVER['REQUEST_URI'];
 
 // load session MikroTik
 
 $session = $_GET['session'];
-
-
-
-
 
 if (!isset($_SESSION["mikhmon"])) {
   header("Location:./admin.php?id=login");
@@ -49,8 +40,7 @@ if (!isset($_SESSION["mikhmon"])) {
   $_SESSION["connect"] = "";
 
 // time zone
-  date_default_timezone_set('Asia/Manila');
-  //date_default_timezone_set($_SESSION['timezone']);
+  date_default_timezone_set($_SESSION['timezone']);
 
 // lang
   include('./include/lang.php');
@@ -77,12 +67,6 @@ if (!isset($_SESSION["mikhmon"])) {
 // routeros api
   include_once('./lib/routeros_api.class.php');
   include_once('./lib/formatbytesbites.php');
-
-
-  checkAndRedirect();
-
-  
-
   $API = new RouterosAPI();
   $API->debug = false;
   $API->connect($iphost, $userhost, decrypt($passwdhost));
